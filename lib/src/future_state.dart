@@ -86,7 +86,7 @@ class FutureHookOptions {
 
 /// use hook function
 FutureHookResult useFutureState(
-  Function([dynamic? params]) future, {
+  Function future, {
   FutureHookOptions? options,
 }) {
   return use(
@@ -104,7 +104,7 @@ class _FutureHook extends Hook<FutureHookResult> {
     this.options,
   });
 
-  final Function(dynamic? params) future;
+  final Function future;
   final FutureHookOptions? options;
 
   @override
