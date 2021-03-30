@@ -86,7 +86,7 @@ class FutureHookOptions {
 
 /// use hook function
 FutureHookResult useFutureState(
-  Function(dynamic? params) future, {
+  Function([dynamic? params]) future, {
   FutureHookOptions? options,
 }) {
   return use(
