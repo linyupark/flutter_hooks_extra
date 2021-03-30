@@ -22,7 +22,7 @@ class FutureHookResult {
   bool? loading;
 
   /// 手动触发 service 执行，参数会传递给 service
-  Function(dynamic? params)? run;
+  Function([dynamic params])? run;
 
   /// 当次执行的 service 的参数数组
   dynamic? params;
@@ -122,7 +122,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
     // 默认数据
     _result.data = hook.options?.initialData;
     // 执行函数
-    _result.run = (dynamic? params) async {
+    _result.run = ([dynamic? params]) async {
       // 执行入参
       dynamic runParams = hook.options?.defaultParams;
       if (runParams is Map && params is Map) {
@@ -185,6 +185,11 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
         });
       }
     };
+    // 非手动自动执行
+    if (hook.options!.manual == false) {
+      // print('auto run useFutureState');
+      _result.run!();
+    }
   }
 
   @override
