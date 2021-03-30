@@ -145,11 +145,15 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
             _cachedData[hook.options!.cacheKey] ?? hook.options?.initialData;
       }
 
+      print(
+          'run runParams: $runParams options: ${hook.options} _result: $_result');
+
       setState(() {
         _result.loading = true;
       });
 
       try {
+        // ignore: avoid_dynamic_calls
         final dynamic futureValue = await hook.future(runParams);
         _result.data = futureValue;
         // 缓存处理
@@ -187,7 +191,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
     };
     // 非手动自动执行
     if (hook.options!.manual == false) {
-      // print('auto run useFutureState');
+      print('auto run useFutureState');
       _result.run!();
     }
   }
