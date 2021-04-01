@@ -1,5 +1,5 @@
 name: flutter_hooks_extra
-description: Some Flutter hooks base on flutter_hooks.
+description: Add some reference ahooks or custom hooks with higher reusability based on flutter_hooks.
 version: 0.0.1
 homepage: https://github.com/linyupark/flutter_hooks_extra
 

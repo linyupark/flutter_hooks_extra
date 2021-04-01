@@ -4,31 +4,26 @@ part of 'hooks.dart';
 class FutureHookResult {
   /// 构建
   FutureHookResult({
-    this.data,
-    this.error,
     this.loading = false,
-    this.run,
-    this.params,
-    this.refresh,
   });
 
   /// 返回数据
-  dynamic? data;
+  late dynamic data;
 
   /// service 抛出的异常
-  Error? error;
+  late Error? error;
 
   /// service 是否正在执行
-  bool? loading;
+  bool loading;
 
   /// 手动触发 service 执行，参数会传递给 service
-  Function([dynamic? params])? run;
+  late Function([dynamic? params]) run;
 
   /// 当次执行的 service 的参数数组
-  dynamic? params;
+  late dynamic params;
 
   /// 使用上一次的 params，重新执行 service
-  Function()? refresh;
+  late Function() refresh;
 }
 
 /// 所有的 Options 均是可选的。
@@ -50,7 +45,7 @@ class FutureHookOptions {
 
   /// 默认 false。 即在初始化时自动执行 service。
   /// 如果设置为 true，则需要手动调用 run 触发执行。
-  bool? manual;
+  bool manual;
 
   /// 默认的 data
   dynamic? initialData;
@@ -72,10 +67,10 @@ class FutureHookOptions {
   dynamic? defaultParams;
 
   /// 设置显示 loading 的延迟时间，避免闪烁
-  int? loadingDelay;
+  int loadingDelay;
 
   /// 轮询间隔，单位为毫秒。设置后，将进入轮询模式，定时触发 run
-  int? pollingInterval;
+  int pollingInterval;
 
   /// 在页面隐藏时，是否继续轮询。默认为 true，即不会停止轮询
   /// 如果设置为 false , 在页面隐藏时会暂时停止轮询，页面重新显示时继续上次轮询
@@ -86,7 +81,7 @@ class FutureHookOptions {
 
 /// use hook function
 FutureHookResult useFutureState(
-  Future Function(dynamic? params) future, {
+  Future Function(dynamic params) future, {
   FutureHookOptions? options,
 }) {
   return use(
@@ -104,7 +99,7 @@ class _FutureHook extends Hook<FutureHookResult> {
     this.options,
   });
 
-  final Future Function(dynamic? params) future;
+  final Future Function(dynamic params) future;
   final FutureHookOptions? options;
 
   @override
@@ -122,7 +117,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
     // 默认数据
     _result.data = hook.options?.initialData;
     // 执行函数
-    _result.run = ([dynamic? params]) async {
+    _result.run = ([dynamic params]) async {
       // 执行入参
       dynamic runParams = hook.options?.defaultParams;
       if (runParams is Map && params is Map) {
@@ -130,6 +125,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
         runParams.addAll(params);
       }
       if (runParams is Map == false && params != null) {
+        // print('runParams $params');
         // 非map覆盖入参
         runParams = params;
       }
@@ -146,6 +142,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
       }
 
       setState(() {
+        _result.params = runParams;
         _result.loading = true;
       });
 
@@ -162,15 +159,15 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
           hook.options!.onSuccess!(futureValue, runParams);
         }
         // 轮询
-        if (hook.options!.pollingInterval! > 0) {
+        if (hook.options!.pollingInterval > 0) {
           await Future<void>.delayed(
-            Duration(milliseconds: hook.options!.pollingInterval!),
+            Duration(milliseconds: hook.options!.pollingInterval),
           );
-          _result.run!(runParams);
+          _result.run(runParams);
         }
         // 重复上一次查询
         _result.refresh = () {
-          _result.run!(runParams);
+          _result.run(runParams);
         };
         // print('useFutureState success: $futureValue');
         // print('useFutureState runParams: $runParams');
@@ -183,7 +180,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
       } finally {
         // 延迟 loading 恢复
         await Future<void>.delayed(
-          Duration(milliseconds: hook.options!.loadingDelay!),
+          Duration(milliseconds: hook.options!.loadingDelay),
         );
         setState(() {
           _result.loading = false;
@@ -193,7 +190,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
     // 非手动自动执行
     if (hook.options!.manual == false) {
       // print('auto run useFutureState');
-      _result.run!();
+      _result.run();
     }
   }
 
