@@ -19,15 +19,17 @@ class _StateHookState<T> extends HookState<ValueNotifier<T>, _StateHook<T>> {
   late final _state = ValueNotifier<T>(hook.initialData)
     ..addListener(_listener);
 
-  late final Timer _timer;
+  late Timer _timer;
 
   @override
   void initHook() {
     super.initHook();
+    _timer = Timer(const Duration(milliseconds: 1), () {});
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     _state.dispose();
   }
 
