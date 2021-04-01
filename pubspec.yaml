@@ -1,7 +1,6 @@
 name: flutter_hooks_extra
 description: Some Flutter hooks base on flutter_hooks.
 version: 0.0.1
-author: linyupark@gmail.com
 homepage: https://github.com/linyupark/flutter_hooks_extra
 
 environment:
