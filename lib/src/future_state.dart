@@ -22,13 +22,13 @@ class FutureHookResult {
   bool? loading;
 
   /// 手动触发 service 执行，参数会传递给 service
-  Function([dynamic params])? run;
+  Function([dynamic? params])? run;
 
   /// 当次执行的 service 的参数数组
   dynamic? params;
 
   /// 使用上一次的 params，重新执行 service
-  Function<Future>()? refresh;
+  Function()? refresh;
 }
 
 /// 所有的 Options 均是可选的。
@@ -86,13 +86,13 @@ class FutureHookOptions {
 
 /// use hook function
 FutureHookResult useFutureState(
-  Function future, {
+  Future Function(dynamic? params) future, {
   FutureHookOptions? options,
 }) {
   return use(
     _FutureHook(
       future,
-      options: FutureHookOptions(),
+      options: options ?? FutureHookOptions(),
     ),
   );
 }
@@ -104,7 +104,7 @@ class _FutureHook extends Hook<FutureHookResult> {
     this.options,
   });
 
-  final Function future;
+  final Future Function(dynamic? params) future;
   final FutureHookOptions? options;
 
   @override
@@ -145,16 +145,13 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
             _cachedData[hook.options!.cacheKey] ?? hook.options?.initialData;
       }
 
-      print(
-          'run runParams: $runParams options: ${hook.options} _result: $_result');
-
       setState(() {
         _result.loading = true;
       });
 
       try {
-        // ignore: avoid_dynamic_calls
         final dynamic futureValue = await hook.future(runParams);
+        // print('futureValue $futureValue');
         _result.data = futureValue;
         // 缓存处理
         if (hook.options?.cacheKey != null) {
@@ -171,6 +168,10 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
           );
           _result.run!(runParams);
         }
+        // 重复上一次查询
+        _result.refresh = () {
+          _result.run!(runParams);
+        };
         // print('useFutureState success: $futureValue');
         // print('useFutureState runParams: $runParams');
       } catch (err) {
@@ -191,7 +192,7 @@ class _FutureHookState extends HookState<FutureHookResult, _FutureHook> {
     };
     // 非手动自动执行
     if (hook.options!.manual == false) {
-      print('auto run useFutureState');
+      // print('auto run useFutureState');
       _result.run!();
     }
   }
