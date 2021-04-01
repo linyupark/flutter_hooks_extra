@@ -51,6 +51,30 @@ class _HooksUseFutureStateDemo extends HookWidget {
   }
 }
 
+class _HooksUseDebounceStateDemo extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _debouncedValue = useDebounceState(0);
+    return MaterialApp(
+      title: 'HooksUseDebounceStateDemo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('HooksUseDebounceStateDemo'),
+        ),
+        body: Column(children: [Text('${_debouncedValue.value}')]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // ignore: avoid_dynamic_calls
+            _debouncedValue.value++;
+          },
+          child: const Text('refresh'),
+        ),
+      ),
+    );
+  }
+}
+
 void main() {
-  runApp(_HooksUseFutureStateDemo());
+  // runApp(_HooksUseFutureStateDemo());
+  runApp(_HooksUseDebounceStateDemo());
 }
