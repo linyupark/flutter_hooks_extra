@@ -1,8 +1,8 @@
 name: flutter_hooks_extra
-description: A new Flutter package project.
+description: Some Flutter hooks base on flutter_hooks.
 version: 0.0.1
 author: linyupark@gmail.com
-homepage:
+homepage: https://github.com/linyupark/flutter_hooks_extra
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

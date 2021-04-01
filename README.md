@@ -1,14 +1,50 @@
 # flutter_hooks_extra
 
-A new Flutter package project.
+Some Flutter hooks base on [flutter_hooks](https://pub.dev/packages/flutter_hooks).
 
-## Getting Started
+## useFutureState
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+Hook to manage asynchronous data
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+For the hooks for managing asynchronous data, the API is very close to the [useRequest of ahooks](https://ahooks.js.org/hooks/async), which achieves 70% of the functions, and will try to be fully transplanted in the future.
+
+Example:
+
+```dart
+
+import 'package:flutter_hooks_extra/flutter_hooks_extra.dart';
+
+Future<String> createOrderMessage(params) async {
+  var order = await fetchUserOrder();
+  return 'Your order is: $order';
+}
+
+Future<String> fetchUserOrder() =>
+    // Imagine that this function is
+    // more complex and slow.
+    Future.delayed(
+      Duration(seconds: 2),
+      () => 'Large Latte',
+    );
+
+class HomePage extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final delayDataReq = useFutureState(createOrderMessage,
+        options: FutureHookOptions(
+            manual: true,
+            onSuccess: (data, params) {
+              print(data);
+              print(params);
+            }));
+
+    useEffect(() {
+      delayDataReq.run!();
+      return;
+    }, []);
+
+```
+
+---
+
+More hooks will be added in the future...
