@@ -79,7 +79,7 @@ class FutureHookOptions {
   /// int? debounceInterval;
 }
 
-/// use hook function
+/// useFutureState function
 FutureHookResult useFutureState(
   Future Function(dynamic params) future, {
   FutureHookOptions? options,

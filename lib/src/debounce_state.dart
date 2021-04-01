@@ -1,43 +1,49 @@
 part of 'hooks.dart';
 
-ValueNotifier useDebounceState(dynamic value, {int? wait}) {
-  return use(_DebounceState(value, wait: wait ?? 1000));
+/// useDebounceState function
+ValueNotifier<T> useDebounceState<T>(T initialData, {int? wait}) {
+  return use(_StateHook(initialData: initialData, wait: wait ?? 500));
 }
 
-class _DebounceState extends Hook<ValueNotifier> {
-  const _DebounceState(this.value, {this.wait});
+class _StateHook<T> extends Hook<ValueNotifier<T>> {
+  const _StateHook({required this.initialData, required this.wait});
 
-  final dynamic value;
-  final int? wait;
+  final T initialData;
+  final int wait;
 
   @override
-  _DebounceStateState createState() => _DebounceStateState();
+  _StateHookState<T> createState() => _StateHookState();
 }
 
-class _DebounceStateState extends HookState<ValueNotifier, _DebounceState> {
-  // Timer? _timer;
-  late ValueNotifier<dynamic> _value;
+class _StateHookState<T> extends HookState<ValueNotifier<T>, _StateHook<T>> {
+  late final _state = ValueNotifier<T>(hook.initialData)
+    ..addListener(_listener);
+
+  late final Timer _timer;
 
   @override
   void initHook() {
     super.initHook();
-    // if (_timer is Timer) {
-    //   _timer!.cancel();
-    //   _timer = null;
-    // }
-    // _timer = Timer(Duration(milliseconds: hook.wait!), () {});
-    _value = useState(hook.value);
-  }
-
-  @override
-  ValueNotifier build(BuildContext context) {
-    print('hook.value ${_value.value}');
-    return _value;
   }
 
   @override
   void dispose() {
-    _value.dispose();
-    super.dispose();
+    _state.dispose();
   }
+
+  @override
+  ValueNotifier<T> build(BuildContext context) => _state;
+
+  void _listener() {
+    _timer.cancel();
+    _timer = Timer(Duration(milliseconds: hook.wait), () {
+      setState(() {});
+    });
+  }
+
+  @override
+  Object? get debugValue => _state.value;
+
+  @override
+  String get debugLabel => 'useState<$T>';
 }

@@ -10,6 +10,7 @@ Future _queryUserInfo(dynamic params) async {
   return {'name': 'Tom', 'id': '$params'};
 }
 
+/// useFutureState
 class _HooksUseFutureStateDemo extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -51,6 +52,7 @@ class _HooksUseFutureStateDemo extends HookWidget {
   }
 }
 
+/// useDebounceState
 class _HooksUseDebounceStateDemo extends HookWidget {
   @override
   Widget build(BuildContext context) {
@@ -75,6 +77,6 @@ class _HooksUseDebounceStateDemo extends HookWidget {
 }
 
 void main() {
-  // runApp(_HooksUseFutureStateDemo());
   runApp(_HooksUseDebounceStateDemo());
+  // runApp(_HooksUseFutureStateDemo());
 }
