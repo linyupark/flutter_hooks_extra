@@ -2,8 +2,6 @@
 
 Some reference ahooks or custom hooks with higher reusability based on [flutter_hooks](https://pub.dev/packages/flutter_hooks).
 
----
-
 ## [useFutureState](https://pub.dev/documentation/flutter_hooks_extra/latest/flutter_hooks_extra/useFutureState.html)
 
 Hook to manage asynchronous data
@@ -14,6 +12,4 @@ For the hooks for managing asynchronous data, the API is very close to the [useR
 
 A hook that handle the debounce value.
 
----
-
-More hooks will be added in the future...
+## [useUpdateEffect](https://pub.dev/documentation/flutter_hooks_extra/latest/flutter_hooks_extra/useEmitter.html)

@@ -47,5 +47,5 @@ class _StateHookState<T> extends HookState<ValueNotifier<T>, _StateHook<T>> {
   Object? get debugValue => _state.value;
 
   @override
-  String get debugLabel => 'useState<$T>';
+  String get debugLabel => 'useDebounceState<$T>';
 }

@@ -78,5 +78,5 @@ class _HooksUseDebounceStateDemo extends HookWidget {
 
 void main() {
   runApp(_HooksUseDebounceStateDemo());
-  // runApp(_HooksUseFutureStateDemo());
+  runApp(_HooksUseFutureStateDemo());
 }
