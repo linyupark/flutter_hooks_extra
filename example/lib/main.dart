@@ -66,7 +66,6 @@ class _HooksUseDebounceStateDemo extends HookWidget {
         body: Column(children: [Text('${_debouncedValue.value}')]),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // ignore: avoid_dynamic_calls
             _debouncedValue.value++;
           },
           child: const Text('refresh'),
@@ -95,10 +94,10 @@ class _HooksUseEmitterDemo extends HookWidget {
       };
     }, []);
     return MaterialApp(
-      title: 'HooksUseDebounceStateDemo',
+      title: 'HooksUseEmitterDemo',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('HooksUseDebounceStateDemo'),
+          title: const Text('HooksUseEmitterDemo'),
         ),
         body: Column(children: [Text('${_num.value}')]),
         floatingActionButton: FloatingActionButton(
@@ -112,8 +111,65 @@ class _HooksUseEmitterDemo extends HookWidget {
   }
 }
 
+/// useCounter
+class _HooksUseCounterDemo extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _counter = useCounter(0, step: 2, max: 10);
+    return MaterialApp(
+      title: 'HooksUseCounterDemo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('HooksUseCounterDemo'),
+        ),
+        body: Column(children: [
+          Text('${_counter.current}'),
+          TextButton(
+            onPressed: _counter.reset,
+            child: const Text('Reset'),
+          )
+        ]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _counter.inc,
+          child: const Text('refresh'),
+        ),
+      ),
+    );
+  }
+}
+
+/// useCountdown
+class _HooksUseCountDownDemo extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _countdown = useCountdown(DateTime(2022, 6, 30), onEnd: () {
+      print('timesup!');
+    });
+    return MaterialApp(
+      title: 'HooksUseCountDownDemo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('HooksUseCountDownDemo'),
+        ),
+        body: Column(children: [
+          Text(
+              '${_countdown.formattedResult.days} / ${_countdown.formattedResult.hours}:${_countdown.formattedResult.minutes}:${_countdown.formattedResult.seconds}'),
+        ]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _countdown.setTarget(DateTime.now());
+          },
+          child: const Text('End'),
+        ),
+      ),
+    );
+  }
+}
+
 void main() {
-  runApp(_HooksUseEmitterDemo());
+  runApp(_HooksUseCountDownDemo());
+  // runApp(_HooksUseCounterDemo());
+  // runApp(_HooksUseEmitterDemo());
   // runApp(_HooksUseDebounceStateDemo());
   // runApp(_HooksUseFutureStateDemo());
 }
