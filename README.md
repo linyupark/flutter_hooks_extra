@@ -12,4 +12,6 @@ For the hooks for managing asynchronous data, the API is very close to the [useR
 
 A hook that handle the debounce value.
 
-## [useUpdateEffect](https://pub.dev/documentation/flutter_hooks_extra/latest/flutter_hooks_extra/useEmitter.html)
+## [useEmitter](https://pub.dev/documentation/flutter_hooks_extra/latest/flutter_hooks_extra/useEmitter.html)
+
+Pass events between multiple widgets. By using useEmitter, this can be simplified.

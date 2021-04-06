@@ -31,7 +31,7 @@ class EventEmitter {
   /// 持久化监听
   void on(String name, EventListener listener, {int? limit}) {
     // 默认 limit 0 = 没有次数限制
-    final container = _EventContainer(listener, limit ?? 0);
+    final container = _EventContainer(listener, limit ?? -1);
 
     if (_containers.containsKey(name)) {
       _containers[name]!.add(container);
@@ -50,7 +50,7 @@ class EventEmitter {
       on(name, listener, limit: 1);
 
   /// 发出事件触发
-  Future<void> emit(String name, dynamic event) async {
+  Future<void> emit(String name, dynamic? event) async {
     if (_containers.containsKey(name)) {
       final removeIndexes = <int>[];
       for (var i = 0; i < _containers[name]!.length; i++) {
@@ -82,31 +82,12 @@ class _EventContainer {
 }
 
 /// 全app就一个emitter
-EventEmitter emitter = EventEmitter();
+Map<String, EventEmitter> _emitterMap = {};
 
 /// Emitter 钩子
-EventEmitter useEmitter() {
-  return use(_Emitter());
-}
-
-class _Emitter extends Hook<EventEmitter> {
-  @override
-  _EmitterState createState() => _EmitterState();
-}
-
-class _EmitterState extends HookState<EventEmitter, _Emitter> {
-  @override
-  void initHook() {
-    super.initHook();
+EventEmitter? useEmitter(String key) {
+  if (_emitterMap.containsKey(key) == false) {
+    _emitterMap[key] = EventEmitter();
   }
-
-  @override
-  EventEmitter build(BuildContext context) {
-    return emitter;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  return _emitterMap[key];
 }

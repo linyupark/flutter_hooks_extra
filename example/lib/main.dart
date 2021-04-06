@@ -76,7 +76,44 @@ class _HooksUseDebounceStateDemo extends HookWidget {
   }
 }
 
+/// useEmitter
+class _HooksUseEmitterDemo extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _emitter = useEmitter('demo');
+    final _num = useState(0);
+
+    void _addNumHandler(step) {
+      _num.value += step;
+    }
+
+    useEffect(() {
+      // _emitter.on('addNum', _addNumHandler);
+      _emitter.once('addNum', _addNumHandler);
+      return () {
+        _emitter.off('addNum');
+      };
+    }, []);
+    return MaterialApp(
+      title: 'HooksUseDebounceStateDemo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('HooksUseDebounceStateDemo'),
+        ),
+        body: Column(children: [Text('${_num.value}')]),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            _emitter.emit('addNum', 2);
+          },
+          child: const Text('refresh'),
+        ),
+      ),
+    );
+  }
+}
+
 void main() {
-  runApp(_HooksUseDebounceStateDemo());
-  runApp(_HooksUseFutureStateDemo());
+  runApp(_HooksUseEmitterDemo());
+  // runApp(_HooksUseDebounceStateDemo());
+  // runApp(_HooksUseFutureStateDemo());
 }
