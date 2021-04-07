@@ -1,6 +1,6 @@
 # flutter_hooks_extra
 
-<img src="./flutter-hooks-extra.svg">
+<img src="https://github.com/linyupark/flutter_hooks_extra/blob/master/flutter-hooks-extra.svg">
 
 Custom hooks with higher reusability based on [flutter_hooks](https://pub.dev/packages/flutter_hooks).
 
