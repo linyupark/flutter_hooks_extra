@@ -2,26 +2,20 @@ part of 'hooks.dart';
 
 /// Counter number controller
 class CounterController {
-  /// Instance
-  CounterController({
-    required this.current,
-    required this.step,
-  });
-
   /// InitialValue number
-  num current;
+  late num current;
 
   /// Value change step
-  final num step;
+  late num step;
 
   /// Value +
-  late final Function() inc;
+  late Function() inc;
 
   /// Value -
-  late final Function() dec;
+  late Function() dec;
 
   /// Reset value
-  late final Function() reset;
+  late Function() reset;
 }
 
 /// useCounter Hook
@@ -59,14 +53,27 @@ class _Counter extends Hook<CounterController> {
 }
 
 class _CounterState extends HookState<CounterController, _Counter> {
-  late final CounterController result;
+  late final CounterController result = CounterController();
+  late num _initialValue;
+
+  @override
+  void didUpdateHook(_) {
+    super.didUpdateHook(_);
+    if (hook.initialValue != _.initialValue) {
+      result.current = hook.initialValue;
+      _initialValue = hook.initialValue;
+    }
+    if (hook.step != result.step) {
+      result.step = hook.step ?? 1;
+    }
+  }
 
   @override
   void initHook() {
     super.initHook();
-    result =
-        CounterController(current: hook.initialValue, step: hook.step ?? 1);
-    final _current = result.current;
+    result.current = hook.initialValue;
+    _initialValue = hook.initialValue;
+    result.step = hook.step ?? 1;
     result.inc = () {
       if (hook.max != null) {
         if (result.current + result.step > hook.max!) {
@@ -86,8 +93,8 @@ class _CounterState extends HookState<CounterController, _Counter> {
       setState(() {});
     };
     result.reset = () {
-      if (result.current != _current) {
-        result.current = _current;
+      if (result.current != _initialValue) {
+        result.current = _initialValue;
         setState(() {});
       }
     };
